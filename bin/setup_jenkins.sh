@@ -29,7 +29,7 @@ oc new-build -D $'FROM docker.io/openshift/jenkins-agent-maven-35-centos7:v3.11\
 # Create pipeline build config pointing to the ${REPO} with contextDir `openshift-tasks`
 # TBD
 #oc create -f ${REPO}&contextDir=openshift-tasks
-#oc create -f ${REPO}
+oc new-build . --name ocp-demo-pipeline --strategy=pipeline --context-dir=openshift-tasks
 
 # Make sure that Jenkins is fully up and running before proceeding!
 while : ; do
