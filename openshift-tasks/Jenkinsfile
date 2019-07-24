@@ -1,5 +1,6 @@
 #!groovy
 def GUID="413f"
+
 podTemplate(
   label: "skopeo-pod",
   cloud: "openshift",
@@ -37,6 +38,9 @@ podTemplate(
       def devTag  = "${version}-" + currentBuild.number
       // Set the tag for the production image: version
       def prodTag = "${version}"
+      
+      def devProject  = "${GUID}-tasks-dev"
+			def prodProject = "${GUID}-tasks-prod"
 
       // Using Maven build the war file
       // Do not run tests in this step
