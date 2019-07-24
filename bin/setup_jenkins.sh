@@ -27,14 +27,14 @@ oc set env dc/jenkins GUID=${GUID}
 
 
 # Create custom agent container image with skopeo
+# This custome image is pulled from within the pipeline build and used for building code and executing the pipeline
 # TBD
 oc new-build -D $'FROM docker.io/openshift/jenkins-agent-maven-35-centos7:v3.11\n
       USER root\nRUN yum -y install skopeo && yum clean all\n
-      USER 1001' --name=jenkins-agent-appdev -n ${GUID}-jenkins
+      USER 1001' --name=jenkins-agent-appdev -n ${GUID}-jenkins -e GUID=${GUID}
 
 # Create pipeline build config pointing to the ${REPO} with contextDir `openshift-tasks`
 # TBD
-#oc create -f ${REPO}&contextDir=openshift-tasks
 oc new-build . --name ocp-demo-pipeline --strategy=pipeline --context-dir=openshift-tasks -e GUID=${GUID}
 
 # Make sure that Jenkins is fully up and running before proceeding!
