@@ -16,6 +16,9 @@ echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cl
 # TBD
 #oc new-project ${GUID}-jenkins --display-name "${GUID} Jenkins"
 
+# Set up Dev Project
+oc policy add-role-to-user edit system:serviceaccount:${GUID}-jenkins:jenkins -n ${GUID}-jenkins
+
 oc create configmap env-config --from-literal=GUID=${GUID}
 
 oc new-app jenkins-persistent --param ENABLE_OAUTH=true --param MEMORY_LIMIT=2Gi --param VOLUME_CAPACITY=4Gi --param DISABLE_ADMINISTRATIVE_MONITORS=true 
