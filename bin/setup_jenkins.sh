@@ -10,13 +10,17 @@ fi
 GUID=$1
 REPO=$2
 CLUSTER=$3
+
+USER=vbalasub-redhat.com
 echo "Setting up Jenkins in project ${GUID}-jenkins from Git Repo ${REPO} for Cluster ${CLUSTER}"
 
 # Set up Jenkins with sufficient resources
 # TBD
 oc new-project ${GUID}-jenkins --display-name "${GUID} Jenkins"
 
-# Set up Dev Project
+  oc policy add-role-to-user admin ${USER} -n ${GUID}-jenkins
+
+  oc annotate namespace ${GUID}-jenkins    openshift.io/requester=${USER} --overwrite
 
 #oc create configmap env-config --from-literal=GUID=${GUID}
 
