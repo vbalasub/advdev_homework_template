@@ -109,7 +109,7 @@ podTemplate(
           // OpenShift 4
           //openshift.set("image", "dc/tasks", "tasks=image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${devTag}")
           openshift.set("image", "dc/tasks", "tasks=docker-registry.default.svc:5000/${devProject}/tasks:${devTag}")
-          openshift.set("env", "dc/tasks", "VERSION=${devTag} (tasks-dev)")
+          //openshift.set("env", "dc/tasks", "VERSION=${devTag} (tasks-dev)")
 
           // Update the Config Map which contains the users for the Tasks application
           // (just in case the properties files changed in the latest commit)
@@ -121,6 +121,9 @@ podTemplate(
 
           // Wait for application to be deployed
           def dc = openshift.selector("dc", "tasks").object()
+          
+          dc.spec.template.spec.containers[0].env[0].value="${devTag} (tasks-dev)"
+          
           def dc_version = dc.status.latestVersion
           def rc = openshift.selector("rc", "tasks-${dc_version}").object()
 
