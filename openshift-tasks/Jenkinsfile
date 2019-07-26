@@ -109,6 +109,7 @@ podTemplate(
           // OpenShift 4
           //openshift.set("image", "dc/tasks", "tasks=image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${devTag}")
           openshift.set("image", "dc/tasks", "tasks=docker-registry.default.svc:5000/${devProject}/tasks:${devTag}")
+          openshift.set("env", "dc/tasks", "VERSION=${devTag} (tasks-dev)")
 
           // Update the Config Map which contains the users for the Tasks application
           // (just in case the properties files changed in the latest commit)
@@ -141,7 +142,7 @@ podTemplate(
         
         script{
         // TBD. Use skopeo to copy
-sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:redhat docker://image-registry.openshift-image-registry.svc.cluster.local:5000/${devProject}/tasks:${devTag} docker://nexus3-registry.gpte-hw-cicd.svc.cluster.local:5000/tasks:${devTag}"
+sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:redhat docker://docker-registry.default.svc.cluster.local:5000/${devProject}/tasks:${devTag} docker://nexus3-registry.gpte-hw-cicd.svc.cluster.local:5000/tasks:${devTag}"
 
         // TBD: Tag the built image with the production tag.
 openshift.withCluster() {
@@ -178,7 +179,8 @@ openshift.withCluster() {
           def dc = openshift.selector("dc/${destApp}").object()
 
           // OpenShift 4
-          dc.spec.template.spec.containers[0].image="image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${prodTag}"
+          //dc.spec.template.spec.containers[0].image="image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${prodTag}"
+          dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${devProject}/tasks:${prodTag}"
           
           openshift.apply(dc)
 
