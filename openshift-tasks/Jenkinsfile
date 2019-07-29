@@ -136,7 +136,8 @@ podTemplate(
           // Wait for application to be deployed
           def dc = openshift.selector("dc", "tasks").object()
           
-          dc.spec.template.spec.containers[0].env[0].value="${devTag} (tasks-dev)"
+           dc.spec.template.spec.containers[0].env[0].value="${devTag} (tasks-dev)"
+           openshift.apply(dc)
           
           def dc_version = dc.status.latestVersion
           def rc = openshift.selector("rc", "tasks-${dc_version}").object()
