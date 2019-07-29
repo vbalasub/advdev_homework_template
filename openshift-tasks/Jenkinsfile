@@ -199,7 +199,7 @@ openshift.withCluster() {
 
           // OpenShift 4
           //dc.spec.template.spec.containers[0].image="image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${prodTag}"
-          dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${prodProject}/tasks:${prodTag}"
+          dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${devProject}/tasks:${prodTag}"
           
           //Set version env flag
           dc.spec.template.spec.containers[0].env[0].value="${prodTag} ${destApp}"
