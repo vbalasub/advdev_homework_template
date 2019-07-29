@@ -46,6 +46,8 @@ oc new-build -D $'FROM docker.io/openshift/jenkins-agent-maven-35-centos7:v3.11\
 # TBD
 oc new-build . --name ocp-tasks-pipeline --strategy=pipeline --context-dir=openshift-tasks -e GUID=${GUID}
 
+oc set env bc/ocp-tasks-pipeline GUID=${GUID}
+
 # Make sure that Jenkins is fully up and running before proceeding!
 while : ; do
   echo "Checking if Jenkins is Ready..."

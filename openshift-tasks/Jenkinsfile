@@ -1,5 +1,5 @@
 #!groovy
-def GUID="413f"
+def GUID=${env.GUID}
 
 podTemplate(
   label: "skopeo-pod",
@@ -136,6 +136,7 @@ podTemplate(
           // Wait for application to be deployed
           def dc = openshift.selector("dc", "tasks").object()
           
+          //Set version env flag
            dc.spec.template.spec.containers[0].env[0].value="${devTag} (tasks-dev)"
            openshift.apply(dc)
           
@@ -198,8 +199,11 @@ openshift.withCluster() {
 
           // OpenShift 4
           //dc.spec.template.spec.containers[0].image="image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${prodTag}"
-          dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${devProject}/tasks:${prodTag}"
+          dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${prodProject}/tasks:${prodTag}"
           
+          //Set version env flag
+          dc.spec.template.spec.containers[0].env[0].value="${prodTag} ${destApp}"
+           
           openshift.apply(dc)
 
           // Update Config Map in change config files changed in the source
