@@ -70,7 +70,6 @@ podTemplate(
 			}
 			
 			stage('run-parallel-steps') {
-				steps {
 					parallel(
 						a: {
 						  echo "Running Unit Tests"
@@ -81,7 +80,6 @@ podTemplate(
 						  sh "${mvnCmd} sonar:sonar -DskipTests -Dsonar.host.url=http://sonarqube-gpte-hw-cicd.apps.na311.openshift.opentlc.com -Dsonar.projectName='openshift-tasks' -Dsonar.projectVersion=${devTag}"
 						}
 					)
-				}
 			}
 
 
