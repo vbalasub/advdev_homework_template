@@ -186,6 +186,7 @@ openshift.withCluster() {
         script {
       openshift.withCluster() {
         openshift.withProject("${prodProject}") {
+         echo "Active Application before checking:      " + activeApp
           activeApp = openshift.selector("route", "tasks").object().spec.to.name
           if (activeApp == "tasks-green") {
             destApp = "tasks-blue"
