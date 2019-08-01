@@ -120,10 +120,9 @@ podTemplate(
       // Update the Image on the Development Deployment Config
       openshift.withCluster() {
         openshift.withProject("${devProject}") {
-          // OpenShift 4
-          //openshift.set("image", "dc/tasks", "tasks=image-registry.openshift-image-registry.svc:5000/${devProject}/tasks:${devTag}")
+
           openshift.set("image", "dc/tasks", "tasks=docker-registry.default.svc:5000/${devProject}/tasks:${devTag}")
-          //openshift.set("env", "dc/tasks", "VERSION=${devTag} (tasks-dev)")
+         
 
           // Update the Config Map which contains the users for the Tasks application
           // (just in case the properties files changed in the latest commit)
@@ -199,6 +198,8 @@ openshift.withCluster() {
           def dc = openshift.selector("dc/${destApp}").object()
 
           dc.spec.template.spec.containers[0].image="docker-registry.default.svc:5000/${devProject}/tasks:${prodTag}"
+          
+          openshift.set("image", "dc/${destApp}", "tasks=docker-registry.default.svc:5000/${devProject}/tasks:${prodTag}")
           
           //Set version env flag
           dc.spec.template.spec.containers[0].env[0].value="${prodTag} ${destApp}"
